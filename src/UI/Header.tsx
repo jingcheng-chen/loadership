@@ -45,7 +45,7 @@ export const Header = () => {
           </div> */}
 
           <div className='flex lg:items-center lg:justify-center gap-2 lg:gap-4'>
-            <MenuItem title='Github' href='https://github.com/ccc159/loadership' />
+            <MenuItem title='Github' href='https://github.com/jingcheng-chen/loadership' />
             <MenuItem title='About' href='/about' />
           </div>
         </div>

@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@types/prismjs": "^1.26.3",
-    "@vercel/analytics": "^1.1.1",
     "open3d": "^0.2.4",
     "prettier": "^3.1.0",
     "prismjs": "^1.29.0",
