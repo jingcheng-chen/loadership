@@ -163,6 +163,54 @@ export class LoaderDotCircularPulseClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes rotate_${this.params.loaderVersion} {
+                0% {
+                  transform: rotate(0deg);
+                }
+                100% {
+                  transform: rotate(360deg);
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.dotNum)
+          .fill(0)
+          .map((_, i) => {
+            const centerX = this.width / 2;
+            const centerY = this.height / 2;
+            const angle = (2 * Math.PI * i) / this.params.dotNum;
+
+            const dotX = Math.round(this.params.loaderRadius * Math.sin(angle) + centerX);
+            const dotY = Math.round(this.params.loaderRadius * Math.cos(angle) + centerY);
+
+            const animationDelay = (((-this.params.speed * this.params.stackRate) / this.params.dotNum) * i).toFixed(2);
+
+            return (
+              <g
+                key={i}
+                style={{
+                  animation: `rotate_${this.params.loaderVersion} ${this.params.speed}s infinite`,
+                  animationTimingFunction: this.params.bezier,
+                  animationDelay: `${animationDelay}s`,
+                  transformOrigin: `${centerX}px ${centerY}px`,
+                }}
+              >
+                <circle cx={dotX} cy={dotY} r={this.params.dotSize / 2} fill={this.params.dotColor} />
+              </g>
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotCircularPulseClass();
