@@ -167,6 +167,62 @@ export class LoaderDotSquareGridClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes scale_${this.params.loaderVersion} {
+                0%, 100% {
+                  transform: scale(1);
+                }
+                50% {
+                  transform: scale(${this.params.dotScale.toFixed(2)});
+                }
+              }
+              
+              @keyframes fade_${this.params.loaderVersion} {
+                0%, 100% {
+                  opacity: 1;
+                }
+                50% {
+                  opacity: ${this.params.dotOpacity};
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.dotNum * this.params.dotNum)
+          .fill(0)
+          .map((_, i) => {
+            const row = i % this.params.dotNum;
+            const col = Math.floor(i / this.params.dotNum);
+
+            const posX = this.params.paddingX + col * this.params.dotDistance;
+            const posY = this.params.paddingY + row * this.params.dotDistance;
+            const animationDelay = (-this.params.speed * Math.random()).toFixed(2);
+
+            return (
+              <circle
+                key={i}
+                cx={posX + this.params.dotSize / 2}
+                cy={posY + this.params.dotSize / 2}
+                r={this.params.dotSize / 2}
+                fill={this.params.dotColor}
+                style={{
+                  animation: `scale_${this.params.loaderVersion} ${this.params.speed}s linear infinite, fade_${this.params.loaderVersion} ${this.params.speed}s linear infinite`,
+                  animationDelay: `${animationDelay}s`,
+                  transformOrigin: `${posX + this.params.dotSize / 2}px ${posY + this.params.dotSize / 2}px`,
+                }}
+              />
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotSquareGridClass();

@@ -197,6 +197,65 @@ export class LoaderBlockLinearScaleClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    const actualAnimationPercent = this.params.speed / (this.params.speed + this.params.pause);
+
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes scale_${this.params.loaderVersion} {
+                0%, ${actualAnimationPercent * 100}%, 100% {
+                  transform: scaleY(1);
+                }
+                ${actualAnimationPercent * 50}% {
+                  transform: scaleY(${this.params.blockScale});
+                }
+              }
+              
+              @keyframes fade_${this.params.loaderVersion} {
+                0%, ${actualAnimationPercent * 100}%, 100% {
+                  opacity: ${this.params.blockOpacity};
+                }
+                ${actualAnimationPercent * 50}% {
+                  opacity: 1;
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.blockNum)
+          .fill(0)
+          .map((_, i) => {
+            const posX = this.params.paddingX + i * this.params.blockDistance;
+            const posY = this.params.paddingY + ((this.params.blockScale - 1) * this.params.blockHeight) / 2;
+            const animationDelay = ((this.params.speed / this.params.blockNum) * i).toFixed(2);
+
+            return (
+              <rect
+                key={i}
+                x={posX}
+                y={posY}
+                width={this.params.blockWidth}
+                height={this.params.blockHeight}
+                fill={this.params.blockColor}
+                style={{
+                  animation: `scale_${this.params.loaderVersion} ${this.params.speed + this.params.pause}s infinite, fade_${this.params.loaderVersion} ${
+                    this.params.speed + this.params.pause
+                  }s infinite`,
+                  animationDelay: `${animationDelay}s`,
+                  animationTimingFunction: this.params.bezier,
+                  transformOrigin: `${posX + this.params.blockWidth / 2}px ${posY + this.params.blockHeight / 2}px`,
+                }}
+              />
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderBlockLinearScaleClass();
