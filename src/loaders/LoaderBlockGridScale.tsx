@@ -208,12 +208,12 @@ export class LoaderBlockGridScaleClass extends LoaderClass {
   }
 
   public override get SVG(): JSX.Element {
+    const actualAnimationPercent = this.params.speed / (this.params.speed + this.params.pause);
     const radian = (this.params.animationAngle * Math.PI) / 180;
     const origin = new Point3d(0, 0, 0);
     const p2 = new Point3d(1, Math.tan(radian), 0);
     const line = new Line(origin, p2).UnitDirection;
     const maxLength = Math.sqrt(2 * this.params.blockNum * this.params.blockNum);
-    const actualAnimationPercent = this.params.speed / (this.params.speed + this.params.pause);
 
     return (
       <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
@@ -221,21 +221,12 @@ export class LoaderBlockGridScaleClass extends LoaderClass {
           <style>
             {`
               @keyframes scale_${this.params.loaderVersion} {
-                0%, ${actualAnimationPercent * 100}%, 100% {
-                  transform: scale(1);
-                }
-                ${actualAnimationPercent * 50}% {
-                  transform: scale(${this.params.blockScale});
-                }
+                0%, ${actualAnimationPercent * 100}%, 100% { transform: scale(1); }
+                ${actualAnimationPercent * 50}% { transform: scale(${this.params.blockScale}); }
               }
-              
               @keyframes fade_${this.params.loaderVersion} {
-                0%, ${actualAnimationPercent * 100}%, 100% {
-                  opacity: 1;
-                }
-                ${actualAnimationPercent * 50}% {
-                  opacity: ${this.params.blockOpacity};
-                }
+                0%, ${actualAnimationPercent * 100}%, 100% { opacity: 1; }
+                ${actualAnimationPercent * 50}% { opacity: ${this.params.blockOpacity}; }
               }
             `}
           </style>
@@ -243,32 +234,33 @@ export class LoaderBlockGridScaleClass extends LoaderClass {
 
         {Array(this.params.blockNum * this.params.blockNum)
           .fill(0)
-          .map((_, index) => {
-            const i = Math.floor(index / this.params.blockNum);
-            const j = index % this.params.blockNum;
+          .map((_, i) => {
+            const row = Math.floor(i / this.params.blockNum);
+            const col = i % this.params.blockNum;
+            const x = this.params.paddingX + col * (this.params.blockSize + this.params.blockGap);
+            const y = this.params.paddingY + row * (this.params.blockSize + this.params.blockGap);
 
-            const point = new Vector3d(j, i, 0);
+            const point = new Vector3d(col, row, 0);
             const distance = Vector3d.DotProduct(point, line);
             const percent = distance / maxLength;
 
-            const posX = this.params.paddingX + j * this.params.blockSize + (j - 1) * this.params.blockGap;
-            const posY = this.params.paddingY + i * this.params.blockSize + (i - 1) * this.params.blockGap;
+            console.log(this.params.speed * percent);
 
             return (
               <rect
-                key={index}
-                x={posX}
-                y={posY}
+                key={i}
+                x={x}
+                y={y}
                 width={this.params.blockSize}
                 height={this.params.blockSize}
                 fill={this.params.blockColor}
                 style={{
-                  animation: `scale_${this.params.loaderVersion} ${this.params.speed + this.params.pause}s infinite, fade_${this.params.loaderVersion} ${
-                    this.params.speed + this.params.pause
-                  }s infinite`,
-                  animationDelay: `${(this.params.speed * percent).toFixed(2)}s`,
+                  animationName: `scale_${this.params.loaderVersion}, fade_${this.params.loaderVersion}`,
+                  animationDuration: `${this.params.speed + this.params.pause}s`,
+                  animationIterationCount: 'infinite',
                   animationTimingFunction: this.params.bezier,
-                  transformOrigin: `${posX + this.params.blockSize / 2}px ${posY + this.params.blockSize / 2}px`,
+                  animationDelay: `${(this.params.speed * percent).toFixed(2)}s`,
+                  transformOrigin: `${x + this.params.blockSize / 2}px ${y + this.params.blockSize / 2}px`,
                 }}
               />
             );
