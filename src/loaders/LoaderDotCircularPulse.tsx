@@ -195,17 +195,21 @@ export class LoaderDotCircularPulseClass extends LoaderClass {
             const animationDelay = (((-this.params.speed * this.params.stackRate) / this.params.dotNum) * i).toFixed(2);
 
             return (
-              <g
+              <circle
                 key={i}
+                cx={dotX}
+                cy={dotY}
+                r={this.params.dotSize / 2}
+                fill={this.params.dotColor}
                 style={{
-                  animation: `rotate_${this.params.loaderVersion} ${this.params.speed}s infinite`,
+                  animationName: `rotate_${this.params.loaderVersion}`,
+                  animationDuration: `${this.params.speed}s`,
                   animationTimingFunction: this.params.bezier,
                   animationDelay: `${animationDelay}s`,
+                  animationIterationCount: 'infinite',
                   transformOrigin: `${centerX}px ${centerY}px`,
                 }}
-              >
-                <circle cx={dotX} cy={dotY} r={this.params.dotSize / 2} fill={this.params.dotColor} />
-              </g>
+              />
             );
           })}
       </svg>
