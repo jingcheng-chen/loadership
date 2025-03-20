@@ -24,7 +24,7 @@ Loadership is scaffolded using vite + bun. To run the development server, follow
 1. Clone the repository
 
 ```bash
-git clone https://github.com/ccc159/loadership.git
+git clone https://github.com/jingcheng-chen/loadership.git
 ```
 
 2. Install dependencies

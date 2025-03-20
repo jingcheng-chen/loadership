@@ -29,18 +29,18 @@ export const AboutPage = () => {
         <div className='mt-6 text-base font-normal leading-7 text-gray-600 '>
           <p>
             <span className='font-extrabold'>Loadership</span> has open-sourced its full code at{' '}
-            <a href='https://github.com/ccc159/loadership' target='_blank' className='text-[#827398]'>
+            <a href='https://github.com/jingcheng-chen/loadership' target='_blank' className='text-[#827398]'>
               <strong>Github</strong>
             </a>
             .
           </p>
           <p className='mt-3'>
             If you have any feedback or questions to ask, please utilize the Github repo's{' '}
-            <a href='https://github.com/ccc159/loadership/issues' target='_blank' className='text-[#827398]'>
+            <a href='https://github.com/jingcheng-chen/loadership/issues' target='_blank' className='text-[#827398]'>
               <strong>issues</strong>
             </a>{' '}
             and{' '}
-            <a href='https://github.com/ccc159/loadership/discussions' target='_blank' className='text-[#827398]'>
+            <a href='https://github.com/jingcheng-chen/loadership/discussions' target='_blank' className='text-[#827398]'>
               <strong>discussions</strong>
             </a>{' '}
           </p>
