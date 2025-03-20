@@ -168,6 +168,52 @@ export class LoaderDotLinearMotionBlurClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes loadership_${this.params.loaderVersion}_move {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(${this.params.dotDistance}px);
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.dotNum)
+          .fill(0)
+          .map((_, i) => {
+            const size = this.params.dotSize * (1 - (i * this.params.trailScale) / this.params.dotNum);
+            return (
+              <circle
+                key={i}
+                cx={this.params.paddingX + size / 2}
+                cy={this.params.paddingY + (this.params.dotSize - size) / 2 + size / 2}
+                r={size / 2}
+                fill={this.params.dotColor}
+                opacity={(this.params.trailOpacity - (this.params.trailOpacity / this.params.dotNum) * i).toFixed(2)}
+                style={{
+                  animationName: `loadership_${this.params.loaderVersion}_move`,
+                  animationDuration: `${this.params.speed}s`,
+                  animationTimingFunction: this.params.bezier,
+                  animationIterationCount: 'infinite',
+                  animationDirection: 'alternate',
+                  animationDelay: `${i * this.params.blurInterval}ms`,
+                  transformOrigin: `${this.params.paddingX + size / 2}px ${this.params.paddingY + (this.params.dotSize - size) / 2 + size / 2}px`,
+                }}
+              />
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotLinearMotionBlurClass();
