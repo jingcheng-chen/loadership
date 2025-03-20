@@ -168,6 +168,67 @@ export class LoaderDotCircularScaleClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes scale_${this.params.loaderVersion} {
+                0%, 20%, 80%, 100% {
+                  transform: scale(1);
+                }
+                50% {
+                  transform: scale(${this.params.dotScale});
+                }
+              }
+              
+              @keyframes fade_${this.params.loaderVersion} {
+                0%, 20%, 80%, 100% {
+                  opacity: ${this.params.dotOpacity};
+                }
+                50% {
+                  opacity: 1;
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.dotNum)
+          .fill(0)
+          .map((_, i) => {
+            const centerX = this.width / 2;
+            const centerY = this.height / 2;
+            const angle = (2 * Math.PI * i) / this.params.dotNum;
+
+            const dotX = Math.round(this.params.loaderRadius * Math.sin(angle) + centerX);
+            const dotY = Math.round(this.params.loaderRadius * Math.cos(angle) + centerY);
+
+            const animationDelay = ((-this.params.speed / this.params.dotNum) * i).toFixed(2);
+
+            return (
+              <circle
+                key={i}
+                cx={dotX}
+                cy={dotY}
+                r={this.params.dotSize / 2}
+                fill={this.params.dotColor}
+                style={{
+                  animationName: `scale_${this.params.loaderVersion}, fade_${this.params.loaderVersion}`,
+                  animationDuration: `${this.params.speed}s`,
+                  animationTimingFunction: this.params.bezier,
+                  animationIterationCount: 'infinite',
+                  animationDelay: `${animationDelay}s`,
+                  transformOrigin: `${dotX}px ${dotY}px`,
+                }}
+              />
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotCircularScaleClass();
