@@ -215,70 +215,66 @@ export class LoaderBlockGridScaleClass extends LoaderClass {
     const maxLength = Math.sqrt(2 * this.params.blockNum * this.params.blockNum);
     const actualAnimationPercent = this.params.speed / (this.params.speed + this.params.pause);
 
-    const blocks = [];
-
-    for (let i = 0; i < this.params.blockNum; i++) {
-      for (let j = 0; j < this.params.blockNum; j++) {
-        const point = new Vector3d(j, i, 0);
-        const distance = Vector3d.DotProduct(point, line);
-        const percent = distance / maxLength;
-        const animationDelay = (this.params.speed * percent).toFixed(2);
-
-        const x = this.params.paddingX + j * this.params.blockSize + (j - 1) * this.params.blockGap;
-        const y = this.params.paddingY + i * this.params.blockSize + (i - 1) * this.params.blockGap;
-
-        blocks.push(
-          <rect key={`${i}-${j}`} x={x} y={y} width={this.params.blockSize} height={this.params.blockSize} fill={this.params.blockColor} opacity='1'>
-            <animate
-              attributeName='transform'
-              attributeType='XML'
-              type='scale'
-              from='1'
-              to={String(this.params.blockScale)}
-              dur={`${this.params.speed + this.params.pause}s`}
-              begin={`${animationDelay}s`}
-              repeatCount='indefinite'
-              keyTimes={`0;${actualAnimationPercent * 0.5};${actualAnimationPercent};1`}
-              values={`1;${this.params.blockScale};1;1`}
-              calcMode='spline'
-              keySplines={this.getSVGBezier()}
-            />
-            <animate
-              attributeName='opacity'
-              from='1'
-              to={String(this.params.blockOpacity)}
-              dur={`${this.params.speed + this.params.pause}s`}
-              begin={`${animationDelay}s`}
-              repeatCount='indefinite'
-              keyTimes={`0;${actualAnimationPercent * 0.5};${actualAnimationPercent};1`}
-              values={`1;${this.params.blockOpacity};1;1`}
-              calcMode='spline'
-              keySplines={this.getSVGBezier()}
-            />
-          </rect>
-        );
-      }
-    }
-
     return (
-      <svg xmlns='http://www.w3.org/2000/svg' width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`}>
-        {blocks}
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes scale_${this.params.loaderVersion} {
+                0%, ${actualAnimationPercent * 100}%, 100% {
+                  transform: scale(1);
+                }
+                ${actualAnimationPercent * 50}% {
+                  transform: scale(${this.params.blockScale});
+                }
+              }
+              
+              @keyframes fade_${this.params.loaderVersion} {
+                0%, ${actualAnimationPercent * 100}%, 100% {
+                  opacity: 1;
+                }
+                ${actualAnimationPercent * 50}% {
+                  opacity: ${this.params.blockOpacity};
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.blockNum * this.params.blockNum)
+          .fill(0)
+          .map((_, index) => {
+            const i = Math.floor(index / this.params.blockNum);
+            const j = index % this.params.blockNum;
+
+            const point = new Vector3d(j, i, 0);
+            const distance = Vector3d.DotProduct(point, line);
+            const percent = distance / maxLength;
+
+            const posX = this.params.paddingX + j * this.params.blockSize + (j - 1) * this.params.blockGap;
+            const posY = this.params.paddingY + i * this.params.blockSize + (i - 1) * this.params.blockGap;
+
+            return (
+              <rect
+                key={index}
+                x={posX}
+                y={posY}
+                width={this.params.blockSize}
+                height={this.params.blockSize}
+                fill={this.params.blockColor}
+                style={{
+                  animation: `scale_${this.params.loaderVersion} ${this.params.speed + this.params.pause}s infinite, fade_${this.params.loaderVersion} ${
+                    this.params.speed + this.params.pause
+                  }s infinite`,
+                  animationDelay: `${(this.params.speed * percent).toFixed(2)}s`,
+                  animationTimingFunction: this.params.bezier,
+                  transformOrigin: `${posX + this.params.blockSize / 2}px ${posY + this.params.blockSize / 2}px`,
+                }}
+              />
+            );
+          })}
       </svg>
     );
-  }
-
-  private getSVGBezier(): string {
-    if (this.params.bezier === 'ease-in-out') {
-      return '0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1';
-    }
-
-    const match = this.params.bezier.match(/cubic-bezier\(([\d.]+),\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)\)/);
-    if (match) {
-      const values = match.slice(1, 5).join(' ');
-      return `${values}; ${values}; ${values}`;
-    }
-
-    return '0 0 1 1; 0 0 1 1; 0 0 1 1';
   }
 }
 
