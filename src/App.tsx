@@ -1,6 +1,8 @@
 import { LoaderGrid } from './UI/LoaderGrid';
 import { Steps } from './UI/Steps';
 import { Features } from './UI/Features';
+import ShinyText from './components/ShinyText';
+import AnimatedContent from './components/AnimatedContent';
 
 function App() {
   return (
@@ -24,18 +26,25 @@ function App() {
               className='relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-lp transition-all duration-200 bg-gray-900 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900'
               role='button'
             >
-              Get started
+              <ShinyText text='Get started' disabled={false} speed={3} />
             </a>
           </div>
         </div>
       </div>
 
-      <Features />
-      <Steps />
+      <AnimatedContent distance={150} direction='vertical' reverse={false} config={{ tension: 70, friction: 40 }} initialOpacity={0.2} animateOpacity scale={1.03} threshold={0.2}>
+        <Features />
+      </AnimatedContent>
 
-      <div id='configurator' className='mt-16 md:mt-20'>
-        <LoaderGrid />
-      </div>
+      <AnimatedContent distance={150} direction='vertical' reverse={false} config={{ tension: 70, friction: 40 }} initialOpacity={0.2} animateOpacity scale={1.03} threshold={0.2}>
+        <Steps />
+      </AnimatedContent>
+
+      <AnimatedContent distance={150} direction='vertical' reverse={false} config={{ tension: 70, friction: 40 }} initialOpacity={0.2} animateOpacity scale={1.03} threshold={0.2}>
+        <div id='configurator' className='mt-16 md:mt-20'>
+          <LoaderGrid />
+        </div>
+      </AnimatedContent>
     </section>
   );
 }

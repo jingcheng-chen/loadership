@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-spring/web": "^9.7.5",
     "@types/prismjs": "^1.26.5",
     "open3d": "^0.2.4",
     "prettier": "^3.5.3",

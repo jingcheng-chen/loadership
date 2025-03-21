@@ -8,20 +8,6 @@ export const AboutPage = () => {
             <span className='font-extrabold'>Loadership</span> is a collection of CSS-only loader configurators. It aims to provide the cleanest interface to configure and generate stunning loaders
             for your website. Simply Copy & Paste without any installation or dependency hassle.
           </p>
-
-          <div className='ml-6'>
-            <h3 className='mt-12 text-xl font-bold text-gray-900'>Ownership</h3>
-            Loadership is a side project of{' '}
-            <a href='https://chen.works' target='_blank' className='text-[#827398]'>
-              <strong>Jingcheng Chen</strong>
-            </a>
-            .
-          </div>
-
-          <div className='ml-6'>
-            <h3 className='mt-12 text-xl font-bold text-gray-900'>Credits</h3>
-            The UI controls are based on the work of <em>Flowbite</em>. The landing page is inspired by <em>Landingfolio</em>. Some of the loaders are based on the work of <em>loading.io</em>.
-          </div>
         </div>
         <h1 id='license' className='text-3xl font-extrabold text-gray-900 sm:text-4xl mt-12'>
           Contribution
