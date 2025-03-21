@@ -200,6 +200,7 @@ export class LoaderBlockLinearScaleClass extends LoaderClass {
 
   public override get SVG(): JSX.Element {
     const actualAnimationPercent = this.params.speed / (this.params.speed + this.params.pause);
+    const duration = this.params.speed + this.params.pause;
 
     return (
       <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
@@ -243,10 +244,10 @@ export class LoaderBlockLinearScaleClass extends LoaderClass {
                 height={this.params.blockHeight}
                 fill={this.params.blockColor}
                 style={{
-                  animation: `scale_${this.params.loaderVersion} ${this.params.speed + this.params.pause}s infinite, fade_${this.params.loaderVersion} ${
-                    this.params.speed + this.params.pause
-                  }s infinite`,
-                  animationDelay: `${animationDelay}s`,
+                  animationName: `scale_${this.params.loaderVersion}, fade_${this.params.loaderVersion}`,
+                  animationDuration: `${duration}s, ${duration}s`,
+                  animationIterationCount: 'infinite, infinite',
+                  animationDelay: `${animationDelay}s, ${animationDelay}s`,
                   animationTimingFunction: this.params.bezier,
                   transformOrigin: `${posX + this.params.blockWidth / 2}px ${posY + this.params.blockHeight / 2}px`,
                 }}
