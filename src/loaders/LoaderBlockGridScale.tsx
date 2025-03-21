@@ -244,8 +244,6 @@ export class LoaderBlockGridScaleClass extends LoaderClass {
             const distance = Vector3d.DotProduct(point, line);
             const percent = distance / maxLength;
 
-            console.log(this.params.speed * percent);
-
             return (
               <rect
                 key={i}
