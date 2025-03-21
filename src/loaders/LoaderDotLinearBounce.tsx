@@ -172,6 +172,54 @@ export class LoaderDotLinearBounceClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    const actualAnimationPercent = this.params.speed / (this.params.speed + this.params.pause);
+
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes bounce_${this.params.loaderVersion} {
+                0%, ${20 * actualAnimationPercent}%, ${50 * actualAnimationPercent}%, ${80 * actualAnimationPercent}%, ${100 * actualAnimationPercent}%, 100% {
+                  transform: translateY(0);
+                }
+                ${40 * actualAnimationPercent}% {
+                  transform: translateY(-${this.params.bounceHeight}px);
+                }
+                ${60 * actualAnimationPercent}% {
+                  transform: translateY(-${0.4 * this.params.bounceHeight}px);
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.dotNum)
+          .fill(0)
+          .map((_, i) => {
+            const posX = this.params.paddingX + i * this.params.dotDistance + this.params.dotSize / 2;
+            const posY = this.params.paddingY + this.params.bounceHeight + this.params.dotSize / 2;
+            const animationDelay = ((this.params.speed / this.params.dotNum) * i).toFixed(2);
+
+            return (
+              <circle
+                key={i}
+                cx={posX}
+                cy={posY}
+                r={this.params.dotSize / 2}
+                fill={this.params.dotColor}
+                style={{
+                  animation: `bounce_${this.params.loaderVersion} ${(this.params.speed + this.params.pause).toFixed(2)}s ${this.params.bezier} ${animationDelay}s infinite`,
+                  transformOrigin: `${posX}px ${posY}px`,
+                }}
+              />
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotLinearBounceClass();
