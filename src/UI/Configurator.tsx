@@ -46,7 +46,7 @@ export const Configurator: React.FC<{ preview?: boolean; loader: LoaderClass; na
   return (
     <>
       <style>{loader.CSS}</style>
-      <section className='px-6 py-12 m-auto bg-white md:px-12 lg:px-16 max-w-7xl grid grid-rows-2 grid-cols-1 md:grid-rows-1 md:grid-cols-2 items-center'>
+      <section className='px-6 py-12 m-auto bg-white md:px-12 lg:px-16 max-w-7xl grid grid-rows-2 grid-cols-1 md:grid-rows-1 md:grid-cols-2 items-center w-full'>
         <section className='flex flex-col gap-6 w-full h-full border border-gray-200 bg-gray-100 rounded-t-xl md:rounded-s-xl md:border-r-0 md:rounded-none p-4'>
           <h2 className='text-2xl font-bold'>{name}</h2>
           {groups.map((group) => {
