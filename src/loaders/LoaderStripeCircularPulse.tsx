@@ -158,6 +158,88 @@ export class LoaderStripeCircularPulseClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    const centerX = this.width / 2;
+    const centerY = this.height / 2;
+
+    // Create points for the clip path based on the same logic as the CSS version
+    let pathData = '';
+    if (this.params.stripePercentage < 0.25) {
+      const x = this.params.stripePercentage * 4 * this.width;
+      pathData = `M${centerX},${centerY} L0,0 L${x},0 Z`;
+    } else if (this.params.stripePercentage < 0.5) {
+      const y = (this.params.stripePercentage - 0.25) * 4 * this.height;
+      pathData = `M${centerX},${centerY} L0,0 L${this.width},0 L${this.width},${y} Z`;
+    } else if (this.params.stripePercentage < 0.75) {
+      const x = (1 - this.params.stripePercentage) * 4 * this.width;
+      pathData = `M${centerX},${centerY} L0,0 L${this.width},0 L${this.width},${this.height} L${x},${this.height} Z`;
+    } else {
+      const y = (1 - this.params.stripePercentage) * 4 * this.height;
+      pathData = `M${centerX},${centerY} L0,0 L${this.width},0 L${this.width},${this.height} L0,${this.height} L0,${y} Z`;
+    }
+
+    // Create array for 6 circles (1 background + 5 animated)
+    const circles = [];
+
+    // Background circle
+    circles.push(
+      <circle
+        key='bg'
+        cx={centerX}
+        cy={centerY}
+        r={this.params.loaderRadius}
+        fill='none'
+        stroke={`${this.params.stripeColor}${convertOpacityToHex(this.params.stripeBackgroundOpacity)}`}
+        strokeWidth={this.params.stripeWidth}
+      />
+    );
+
+    // 5 animated circles with different animation delays
+    for (let i = 0; i < 5; i++) {
+      circles.push(
+        <circle
+          key={i}
+          cx={centerX}
+          cy={centerY}
+          r={this.params.loaderRadius}
+          fill='none'
+          stroke={this.params.stripeColor}
+          strokeWidth={this.params.stripeWidth}
+          clipPath={`url(#clipPath_${this.params.loaderVersion})`}
+          style={{
+            transformOrigin: `${centerX}px ${centerY}px`,
+            animationName: `loadership_${this.params.loaderVersion}_spin`,
+            animationDuration: `${this.params.speed}s`,
+            animationTimingFunction: 'cubic-bezier(0.5, 0, 0.5, 1)',
+            animationIterationCount: 'infinite',
+            animationDelay: `${((-this.params.speed / 25) * i).toFixed(2)}s`,
+          }}
+        />
+      );
+    }
+
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <clipPath id={`clipPath_${this.params.loaderVersion}`}>
+            <path d={pathData} />
+          </clipPath>
+        </defs>
+
+        {circles}
+
+        <style>
+          {`
+            @keyframes loadership_${this.params.loaderVersion}_spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderStripeCircularPulseClass();
