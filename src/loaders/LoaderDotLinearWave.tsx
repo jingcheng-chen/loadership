@@ -146,6 +146,53 @@ export class LoaderDotLinearWaveClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes loadership_${this.params.loaderVersion}_wave {
+                0%, 100% { 
+                  transform: translateY(0);
+                }
+                50% { 
+                  transform: translateY(${this.params.bounceHeight}px);
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {Array(this.params.dotNum)
+          .fill(0)
+          .map((_, i) => {
+            const posX = this.params.paddingX + i * this.params.dotDistance;
+            const animationDelay = ((this.params.speed / this.params.dotNum) * i).toFixed(2);
+
+            return (
+              <circle
+                key={i}
+                cx={posX + this.params.dotSize / 2}
+                cy={this.params.paddingY + this.params.dotSize / 2}
+                r={this.params.dotSize / 2}
+                fill={this.params.dotColor}
+                style={{
+                  animationName: `loadership_${this.params.loaderVersion}_wave`,
+                  animationDuration: `${this.params.speed}s`,
+                  animationIterationCount: 'infinite',
+                  animationDirection: 'alternate',
+                  animationTimingFunction: this.params.bezier,
+                  animationDelay: `${animationDelay}s`,
+                  transformOrigin: 'center',
+                }}
+              />
+            );
+          })}
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotLinearWaveClass();
