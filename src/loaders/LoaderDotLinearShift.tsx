@@ -158,6 +158,93 @@ export class LoaderDotLinearShiftClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes scale_up_${this.params.loaderVersion} {
+                0% {
+                  transform: scale(0);
+                }
+                100% {
+                  transform: scale(1);
+                }
+              }
+              
+              @keyframes scale_down_${this.params.loaderVersion} {
+                0% {
+                  transform: scale(1);
+                }
+                100% {
+                  transform: scale(0);
+                }
+              }
+              
+              @keyframes translate_${this.params.loaderVersion} {
+                0% {
+                  transform: translate(0, 0);
+                }
+                100% {
+                  transform: translate(${this.params.dotDistance}px, 0);
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {/* First dot - scaling up */}
+        <circle
+          cx={this.params.paddingX + this.params.dotSize / 2}
+          cy={this.params.paddingY + this.params.dotSize / 2}
+          r={this.params.dotSize / 2}
+          fill={this.params.dotColor}
+          style={{
+            animation: `scale_up_${this.params.loaderVersion} ${this.params.speed}s infinite`,
+            animationTimingFunction: this.params.bezier,
+            transformOrigin: `${this.params.paddingX + this.params.dotSize / 2}px ${this.params.paddingY + this.params.dotSize / 2}px`,
+          }}
+        />
+
+        {/* Middle dots - translating */}
+        {Array(this.params.dotNum - 1)
+          .fill(0)
+          .map((_, i) => {
+            const posX = this.params.paddingX + i * this.params.dotDistance + this.params.dotSize / 2;
+            const posY = this.params.paddingY + this.params.dotSize / 2;
+
+            return (
+              <circle
+                key={i}
+                cx={posX}
+                cy={posY}
+                r={this.params.dotSize / 2}
+                fill={this.params.dotColor}
+                style={{
+                  animation: `translate_${this.params.loaderVersion} ${this.params.speed}s infinite`,
+                  animationTimingFunction: this.params.bezier,
+                }}
+              />
+            );
+          })}
+
+        {/* Last dot - scaling down */}
+        <circle
+          cx={this.params.paddingX + (this.params.dotNum - 1) * this.params.dotDistance + this.params.dotSize / 2}
+          cy={this.params.paddingY + this.params.dotSize / 2}
+          r={this.params.dotSize / 2}
+          fill={this.params.dotColor}
+          style={{
+            animation: `scale_down_${this.params.loaderVersion} ${this.params.speed}s infinite`,
+            animationTimingFunction: this.params.bezier,
+            transformOrigin: `${this.params.paddingX + (this.params.dotNum - 1) * this.params.dotDistance + this.params.dotSize / 2}px ${this.params.paddingY + this.params.dotSize / 2}px`,
+          }}
+        />
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderDotLinearShiftClass();
