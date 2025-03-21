@@ -2,7 +2,8 @@
     <img width="30%" src="./public/loadership_logo_text.svg">
 </p>
 
-[LoaderShip.com](https://loadership.com) is the ultimate CSS-only loader configuration tool that allows you to effortlessly customize and generate stunning loaders for your website. Simply Copy & Paste without any installation or dependency hassle.
+[LoaderShip.com](https://loadership.com) is your go-to tool for generating and customizing loading spinners. Easily configure and copy-paste spinners in HTML/CSS, or SVG to enhance your web projects with smooth,
+professional loaders.
 
 <p align="center">
     <img width="80%" src="./loader.gif">
