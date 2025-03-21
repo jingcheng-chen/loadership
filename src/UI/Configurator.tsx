@@ -8,14 +8,11 @@ import { getReverseColor } from '../utils';
 import { Field } from '../components/Field';
 import { LoaderClass } from '../loaders/Loader';
 import { Bezier } from '../components/Bezier';
+import { useConfigStore } from '../state/state';
 
 export const Configurator: React.FC<{ preview?: boolean; loader: LoaderClass; name?: string }> = ({ preview = false, loader, name }) => {
   const [params, setParams] = useState<IConfiguratorParam>(loader.params);
-  const [userSettings, setUserSettings] = useState<IUserSettings>({
-    backgroundColor: '#d1d5db',
-    showFrame: false,
-    language: 'html',
-  });
+  const { settings, updateSettings } = useConfigStore();
 
   const controls = loader.controls;
 
@@ -119,18 +116,18 @@ export const Configurator: React.FC<{ preview?: boolean; loader: LoaderClass; na
         </section>
         <section className='flex flex-col w-full h-full mt-4 md:mt-0'>
           <div className='w-full px-4 py-1 border border-gray-200 bg-gray-100 md:rounded-tr-xl flex items-center gap-3 justify-end'>
-            <Checkbox label='Show frame' value={userSettings.showFrame} onCheck={(v) => setUserSettings({ ...userSettings, showFrame: v })} minimal />
-            <ColorInput minimal label='Background color' value={userSettings.backgroundColor} onChange={(v) => setUserSettings({ ...userSettings, backgroundColor: v })} />
+            <Checkbox label='Show frame' value={settings.showFrame} onCheck={(v) => updateSettings({ ...settings, showFrame: v })} minimal />
+            <ColorInput minimal label='Background color' value={settings.backgroundColor} onChange={(v) => updateSettings({ ...settings, backgroundColor: v })} />
           </div>
           <div
-            style={{ backgroundColor: userSettings.backgroundColor }}
+            style={{ backgroundColor: settings.backgroundColor }}
             className='flex justify-center items-center min-h-[300px] max-h-[500px] p-4 border-gray-200 bg-gradient-to-r border-x overflow-auto'
           >
-            <div style={{ border: userSettings.showFrame ? `dashed 1px ${getReverseColor(userSettings.backgroundColor)}` : 'none' }}>{userSettings.language === 'html' ? loader.HTML : loader.SVG}</div>
+            <div style={{ border: settings.showFrame ? `dashed 1px ${getReverseColor(settings.backgroundColor)}` : 'none' }}>{settings.language === 'html' ? loader.HTML : loader.SVG}</div>
           </div>
           <CodeDisplay
-            tab={userSettings.language}
-            setTab={(tab) => setUserSettings({ ...userSettings, language: tab })}
+            tab={settings.language}
+            setTab={(tab) => updateSettings({ ...settings, language: tab })}
             css={loader.CSS}
             html={ReactDOMServer.renderToString(loader.HTML)}
             svg={loader.SVGString}
