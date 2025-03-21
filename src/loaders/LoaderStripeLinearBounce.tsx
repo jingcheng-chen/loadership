@@ -156,6 +156,57 @@ export class LoaderStripeLinearBounceClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes move_${this.params.loaderVersion} {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(${this.params.totalLength - this.params.stripeLength}px);
+                }
+              }
+            `}
+          </style>
+        </defs>
+
+        {/* Background stripe with reduced opacity */}
+        <rect
+          x={this.params.paddingX}
+          y={this.params.paddingY}
+          width={this.params.totalLength}
+          height={this.params.stripeWidth}
+          rx={this.params.stripeRadius}
+          ry={this.params.stripeRadius}
+          fill={this.params.stripeColor}
+          opacity={this.params.stripeOpacity}
+        />
+
+        {/* Moving stripe */}
+        <rect
+          x={this.params.paddingX}
+          y={this.params.paddingY}
+          width={this.params.stripeLength}
+          height={this.params.stripeWidth}
+          rx={this.params.stripeRadius}
+          ry={this.params.stripeRadius}
+          fill={this.params.stripeColor}
+          style={{
+            animationName: `move_${this.params.loaderVersion}`,
+            animationDuration: `${this.params.speed}s`,
+            animationIterationCount: 'infinite',
+            animationDirection: 'alternate',
+            animationTimingFunction: this.params.bezier,
+          }}
+        />
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderStripeLinearBounceClass();
