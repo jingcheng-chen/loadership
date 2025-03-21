@@ -8,10 +8,11 @@ function App() {
       <div className='relative px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl'>
         <div className='max-w-3xl mx-auto text-center'>
           <p className='inline-flex px-4 py-2 text-base text-gray-900 border border-mp rounded-full font-pj bg-lp'>Made by Developers, for Developers</p>
-          <h1 className='mt-5 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight font-pj'>CSS-only loader configurators</h1>
-          <p className='max-w-xl mx-auto mt-6 text-base leading-7 text-gray-600 font-inter'>
-            LoaderShip is the ultimate CSS-only loader (or load spinner) configuration tool that allows you to customize and generate stunning loaders for your website. Simply Copy & Paste without any
-            installation or dependency hassle.
+          <h1 className='mt-5 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl sm:leading-tight lg:text-6xl lg:leading-tight font-pj'>Spin It Your Way</h1>
+          <h1 className='mt-5 text-2xl font-bold leading-tight text-gray-900 sm:text-2xl sm:leading-tight lg:text-4xl lg:leading-tight font-pj'>Copy-Paste Loaders in Seconds</h1>
+          <p className='max-w-4xl mx-auto mt-6 text-base leading-7 text-gray-600 font-inter'>
+            Loadership is your go-to tool for generating and customizing loading spinners. Easily configure and copy-paste spinners in HTML/CSS, or SVG to enhance your web projects with smooth,
+            professional loaders.
           </p>
 
           <div className='relative inline-flex mt-10 group'>

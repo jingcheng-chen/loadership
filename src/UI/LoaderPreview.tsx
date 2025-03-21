@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const LoaderPreview: React.FC<{ loader: ILoader }> = ({ loader }) => {
   // if it is within a month of the loader's release date, show the "New" badge

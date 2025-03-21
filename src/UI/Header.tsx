@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const MenuItem: React.FC<{ title: string; href: string; important?: boolean }> = ({ title, href, important }) => {
   if (important)
