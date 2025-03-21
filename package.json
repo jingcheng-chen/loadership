@@ -15,7 +15,7 @@
     "prettier": "^3.5.3",
     "prismjs": "^1.30.0",
     "react": "^18.3.1",
-    "react-bezier-curve-editor": "^2.1.0",
+    "react-bezier-curve-editor": "^1.1.2",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.0"
   },
