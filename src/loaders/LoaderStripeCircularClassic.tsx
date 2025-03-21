@@ -150,6 +150,83 @@ export class LoaderStripeCircularClassicClass extends LoaderClass {
     `;
     return styles;
   }
+
+  public override get SVG(): JSX.Element {
+    let clipPath = '';
+    if (this.params.stripePercentage < 0.25) {
+      clipPath = `polygon(50% 50%, 0 0, ${(this.params.stripePercentage * 4 * 100).toFixed(2)}% 0)`;
+    } else if (this.params.stripePercentage < 0.5) {
+      clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% ${((this.params.stripePercentage - 0.25) * 4 * 100).toFixed(2)}%)`;
+    } else if (this.params.stripePercentage < 0.75) {
+      clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, ${((1 - this.params.stripePercentage) * 4 * 100).toFixed(2)}% 100%)`;
+    } else {
+      clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 ${((1 - this.params.stripePercentage) * 4 * 100).toFixed(2)}%)`;
+    }
+
+    const centerX = this.width / 2;
+    const centerY = this.height / 2;
+
+    return (
+      <svg width={this.width} height={this.height} viewBox={`0 0 ${this.width} ${this.height}`} xmlns='http://www.w3.org/2000/svg'>
+        <defs>
+          <style>
+            {`
+              @keyframes loadership_${this.params.loaderVersion}_spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+              
+              #clip_${this.params.loaderVersion} {
+                clip-path: ${clipPath};
+              }
+            `}
+          </style>
+          <clipPath id={`clipPath_${this.params.loaderVersion}`}>
+            <path
+              d={`M${centerX},${centerY} L0,0 ${
+                this.params.stripePercentage < 0.25
+                  ? `L${(this.params.stripePercentage * 4 * this.width).toFixed(2)},0`
+                  : `L${this.width},0 ${
+                      this.params.stripePercentage < 0.5
+                        ? `L${this.width},${((this.params.stripePercentage - 0.25) * 4 * this.height).toFixed(2)}`
+                        : `L${this.width},${this.height} ${
+                            this.params.stripePercentage < 0.75
+                              ? `L${((1 - this.params.stripePercentage) * 4 * this.width).toFixed(2)},${this.height}`
+                              : `L0,${this.height} L0,${((1 - this.params.stripePercentage) * 4 * this.height).toFixed(2)}`
+                          }`
+                    }`
+              } Z`}
+            />
+          </clipPath>
+        </defs>
+
+        {/* Background circle with opacity */}
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={this.params.loaderRadius}
+          fill='none'
+          stroke={`${this.params.stripeColor}${convertOpacityToHex(this.params.stripeBackgroundOpacity)}`}
+          strokeWidth={this.params.stripeWidth}
+        />
+
+        {/* Foreground circle with clip path */}
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={this.params.loaderRadius}
+          fill='none'
+          stroke={this.params.stripeColor}
+          strokeWidth={this.params.stripeWidth}
+          clipPath={`url(#clipPath_${this.params.loaderVersion})`}
+          style={{
+            animation: `loadership_${this.params.loaderVersion}_spin ${this.params.speed}s ${this.params.bezier} infinite`,
+            transformOrigin: `${centerX}px ${centerY}px`,
+          }}
+        />
+      </svg>
+    );
+  }
 }
 
 const loader = new LoaderStripeCircularClassicClass();
