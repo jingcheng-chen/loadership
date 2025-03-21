@@ -24,3 +24,9 @@ interface IConfiguratorControl {
 interface IConfiguratorParam {
   [key: string]: number | string | boolean;
 }
+
+interface IUserSettings {
+  backgroundColor: string;
+  showFrame: boolean;
+  language: 'html' | 'css' | 'svg';
+}

@@ -6,10 +6,8 @@ import cssPlugin from 'prettier/plugins/postcss';
 import { useEffect, useState } from 'react';
 import { Notification } from './Notification';
 
-export const CodeDisplay: React.FC<{ html: string; css: string }> = ({ html, css }) => {
-  const [tab, setTab] = useState<'html' | 'css'>('html');
-
-  const TabTitle = ({ title }: { title: 'html' | 'css' }) => (
+export const CodeDisplay: React.FC<{ html: string; css: string; svg: string; tab: 'html' | 'css' | 'svg'; setTab: (tab: 'html' | 'css' | 'svg') => void }> = ({ html, css, svg, tab, setTab }) => {
+  const TabTitle = ({ title }: { title: 'html' | 'css' | 'svg' }) => (
     <li>
       <button
         onClick={() => setTab(title)}
@@ -21,7 +19,7 @@ export const CodeDisplay: React.FC<{ html: string; css: string }> = ({ html, css
   );
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(tab === 'html' ? html : css);
+    navigator.clipboard.writeText(tab === 'html' ? html : tab === 'css' ? css : svg);
     Notification.show('Copied to clipboard!');
   }
 
@@ -31,6 +29,7 @@ export const CodeDisplay: React.FC<{ html: string; css: string }> = ({ html, css
         <ul className='flex text-sm font-medium text-center text-gray-500'>
           <TabTitle title='html' />
           <TabTitle title='css' />
+          <TabTitle title='svg' />
         </ul>
         <div className='flex justify-end'>
           <button
@@ -47,15 +46,16 @@ export const CodeDisplay: React.FC<{ html: string; css: string }> = ({ html, css
           </button>
         </div>
       </div>
-      <div className='p-4 max-h-[400px] overflow-auto'>
+      <div className='p-4 max-h-[700px] overflow-auto'>
         {tab === 'html' && <Code code={html} language='html' />}
         {tab === 'css' && <Code code={css} language='css' />}
+        {tab === 'svg' && <Code code={svg} language='svg' />}
       </div>
     </div>
   );
 };
 
-const Code: React.FC<{ code: string; language: 'html' | 'css' }> = ({ code, language }) => {
+const Code: React.FC<{ code: string; language: 'html' | 'css' | 'svg' }> = ({ code, language }) => {
   const [formattedCode, setFormattedCode] = useState<string>('');
 
   useEffect(() => {
@@ -64,7 +64,8 @@ const Code: React.FC<{ code: string; language: 'html' | 'css' }> = ({ code, lang
   }, [code, language]);
 
   async function format() {
-    setFormattedCode(await prettier.format(code, { parser: language, plugins: [htmlPlugin, cssPlugin] }));
+    const parser = language === 'svg' ? 'html' : language;
+    setFormattedCode(await prettier.format(code, { parser, plugins: [htmlPlugin, cssPlugin] }));
   }
 
   // Returns a highlighted HTML string
